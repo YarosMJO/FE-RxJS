@@ -1,14 +1,10 @@
-const create = require('./of');
-
-const createOne = create.createOne;
-const createThree = create.createThree;
-const createAndComplete = create.createAndComplete;
+const { of } = require('rxjs');
 
 it('Receive three values', done => {
     let i = 0;
-    createThree.subscribe((data) => {
-        i++;
-        if (data === 3) {
+    of(1, 2, 3).subscribe({
+        next: _ => i++,
+        complete: () => {
             expect(i).toEqual(3)
             done();
         }
@@ -17,9 +13,9 @@ it('Receive three values', done => {
 
 it('Receives single value', done => {
     let i = 0;
-    createOne.subscribe((data) => {
-        i++;
-        if (data === 3) {
+    of(1).subscribe({
+        next: _ => i++,
+        complete: () => {
             expect(i).toEqual(1)
             done();
         }
@@ -27,9 +23,7 @@ it('Receives single value', done => {
 });
 
 it('Completes', done => {
-    createAndComplete.subscribe({
-        complete: () => {
-            done();
-        }
+    of().subscribe({
+        complete: () => done()
     })
 });

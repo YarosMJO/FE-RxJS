@@ -1,35 +1,40 @@
-const create = require('./defer');
+const { of, EMPTY, defer, pipe, finalize } = require('rxjs');
 
-const createOne = create.createOne;
-const createThree = create.createThree;
-const createAndComplete = create.createAndComplete;
 
-it('Receive three values', done => {
+it('Should receive exactly three values', done => {
     let i = 0;
-    createThree(3).subscribe((data) => {
-        i++;
-        if (data === 3) {
-            expect(i).toEqual(3)
-            done();
-        }
-    })
+    let emitThreeValues = true;
+
+    defer(() => {
+        return emitThreeValues
+            ? of(1, 2, 3)
+            : EMPTY;
+
+    }).pipe(finalize(() => {
+        expect(i).toEqual(3)
+        done();
+    })).subscribe(_ => i++)
 });
 
-it('Receives single value', done => {
+it('Should receive single value', done => {
     let i = 0;
-    createOne(1).subscribe((data) => {
-        i++;
-        if (data === 1) {
+    let emitOneValues = true;
+
+    defer(() => {
+        return emitOneValues
+            ? of(1)
+            : EMPTY;
+
+    }).pipe(
+        finalize(() => {
             expect(i).toEqual(1)
             done();
-        }
-    })
+        })
+    ).subscribe(_ => i++)
 });
 
-it('Completes', done => {
-    createAndComplete.subscribe({
-        complete: () => {
-            done();
-        }
+it('Must comlete', done => {
+    defer(() => of(true)).subscribe({
+        complete: () => done()
     })
 });
