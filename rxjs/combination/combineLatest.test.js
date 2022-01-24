@@ -8,16 +8,16 @@ it('Expected string should be equal to final emitted value', done => {
   const expectedSloganArray = slogan.split(" ");
 
   combineLatest([
-    timer(0).pipe(mergeMap(() => of(`${expectedSloganArray[0]} `))),
-    timer(1000).pipe(mergeMap(() => of(`${expectedSloganArray[1]} `))),
+    timer(0).pipe(mergeMap(() => of(`${expectedSloganArray[0]}`))),
+    timer(1000).pipe(mergeMap(() => of(`${expectedSloganArray[1]}`))),
     timer(1500).pipe(mergeMap(() => of(`${expectedSloganArray[2]}`))),
   ])
     .pipe(
       last()
     )
     .subscribe(
-      ([timerValOne, timerValTwo, timerValThree]) => {
-        expect(timerValOne + timerValTwo + timerValThree).toEqual(expectedSloganArray.join(" "));
+      (sloganArray) => {
+        expect(sloganArray.join(' ')).toEqual(slogan);
         done();
       }
     );
@@ -31,8 +31,8 @@ it('Emitted values should be received at the same time, whenever they was emitte
     timer(1000).pipe(mergeMap(() => of(1))),
   ])
     .subscribe(
-      ([timerValOne, timerValTwo]) => {
-        expect(timerValOne + timerValTwo).toEqual(expectedCheckSum);
+      (numbers) => {
+        expect(numbers.reduce((acc, value) => acc + value, 0)).toEqual(expectedCheckSum);
         done();
       }
     );

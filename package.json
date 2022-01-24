@@ -5,6 +5,7 @@
     "type": "module",
     "scripts": {
         "test": "jest",
+        "test:combineLatest": "jest combination/combineLatest.test",
         "debug-test": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
     },
     "dependencies": {
